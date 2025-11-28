@@ -1,0 +1,97 @@
+name: Generate Weekly Report
+
+on:
+  schedule:
+    # Run every Sunday at 00:00 UTC (Monday 9:00 AM JST)
+    - cron: '0 0 * * 0'
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate weekly report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+          SEND_NOTIFICATIONS: 'true'
+        run: |
+          npm run generate-report
+
+      - name: Commit and push report
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Check if there are changes
+          if [[ -n $(git status --porcelain) ]]; then
+            git add reports/*.md
+            git commit -m "📰 Add weekly React trends report - $(date +'%Y-%m-%d')"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Trigger Vercel deployment
+        if: success()
+        run: |
+          # This will trigger a new deployment on Vercel
+          echo "Report generated and committed. Vercel will automatically deploy the changes."
+
+  send-notifications:
+    needs: generate-report
+    runs-on: ubuntu-latest
+    if: success()
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Start development server
+        run: |
+          npm run dev &
+          sleep 10 # Wait for server to start
+
+      - name: Send push notifications
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+          NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
+        run: |
+          # Get the latest report week
+          LATEST_REPORT=$(ls -t reports/*.md | head -1 | sed 's/.*\/\(.*\)\.md/\1/')
+
+          # Send notifications via API
+          curl -X POST http://localhost:3000/api/notify \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"title\": \"📰 New React Weekly Trends Report Available!\",
+              \"body\": \"Check out the latest trends and updates in the React ecosystem for week ${LATEST_REPORT}\",
+              \"url\": \"https://your-domain.com/blog/${LATEST_REPORT}\"
+            }"
