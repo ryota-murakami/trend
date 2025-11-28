@@ -2,17 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import webpush from 'web-push'
 import { getSubscriptions } from '@/lib/subscriptions'
 
-// Configure web-push only if keys are available
-const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
-const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY
-
-if (vapidPublicKey && vapidPrivateKey) {
-  webpush.setVapidDetails(
-    'mailto:your-email@example.com',
-    vapidPublicKey,
-    vapidPrivateKey
-  )
-}
+// Lazy configure web-push; avoid build-time validation errors
+const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY?.trim()
+const vapidPrivateKey = process.env.VAPID_PRIVATE_KEY?.trim()
+let vapidConfigured = false
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,6 +25,24 @@ export async function POST(request: NextRequest) {
         { error: 'Push notifications not configured' },
         { status: 503 }
       )
+    }
+
+    // Configure VAPID at request-time
+    if (!vapidConfigured) {
+      try {
+        webpush.setVapidDetails(
+          'mailto:your-email@example.com',
+          vapidPublicKey,
+          vapidPrivateKey
+        )
+        vapidConfigured = true
+      } catch (e) {
+        console.error('Failed to configure VAPID keys:', e)
+        return NextResponse.json(
+          { error: 'Invalid VAPID configuration' },
+          { status: 500 }
+        )
+      }
     }
 
     const subscriptions = getSubscriptions()
