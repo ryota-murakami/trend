@@ -1,8 +1,8 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #111111;
 }
 
 @theme inline {
@@ -12,15 +12,30 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* Disable automatic light text in dark scheme to avoid low contrast
+   when sections use light backgrounds. Keep consistent readable colors. */
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Improve markdown/article readability */
+.prose,
+.prose p,
+.prose li,
+.prose a,
+.prose strong,
+.prose code {
+  color: #1f2937; /* gray-800 equivalent */
+}
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  color: #0f172a; /* slate-900 equivalent */
+}
+.prose a {
+  text-decoration-color: #3b82f6; /* blue-500 */
 }
