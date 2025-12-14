@@ -1,41 +1,964 @@
 @import 'tailwindcss';
 
+/* ============================================
+   2025 Modern Design System
+   - CSS Custom Properties for theme switching
+   - Optimized typography for readability
+   - Minimal color palette with depth
+   ============================================ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #111111;
+  /* Light Theme (Default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --bg-elevated: #ffffff;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-muted: #dbeafe;
+
+  --border: #e2e8f0;
+  --border-muted: #f1f5f9;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 300ms ease;
+}
+
+[data-theme="dark"] {
+  /* Dark Theme */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-tertiary: #334155;
+  --bg-elevated: #1e293b;
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --accent: #60a5fa;
+  --accent-hover: #93c5fd;
+  --accent-muted: #1e3a5f;
+
+  --border: #334155;
+  --border-muted: #1e293b;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--bg-primary);
+  --color-foreground: var(--text-primary);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-/* Disable automatic light text in dark scheme to avoid low contrast
-   when sections use light backgrounds. Keep consistent readable colors. */
+/* Base Styles */
+html {
+  scroll-behavior: smooth;
+}
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans, system-ui, -apple-system, sans-serif);
+  line-height: 1.6;
+  transition:
+    background-color var(--transition-slow),
+    color var(--transition-slow);
 }
 
-/* Improve markdown/article readability */
+/* Smooth theme transition for themed containers */
+header,
+footer,
+main,
+section,
+article,
+aside,
+nav,
+.card,
 .prose,
-.prose p,
-.prose li,
-.prose a,
-.prose strong,
-.prose code {
-  color: #1f2937; /* gray-800 equivalent */
+.glass {
+  transition-property: background-color, border-color, box-shadow, color;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
 }
+
+/* ============================================
+   Typography - Optimized for Readability
+   ============================================ */
+
+/* Article/Prose Styles */
+.prose {
+  color: var(--text-primary);
+  line-height: 1.8;
+  letter-spacing: -0.01em;
+}
+
+.prose p {
+  color: var(--text-secondary);
+  margin-bottom: 1.25em;
+  font-size: 1.0625rem;
+}
+
+/* Main title with emoji */
+.prose h1 {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 2.25rem;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Section headings (Trending, Library Updates, Community, Insights) */
+.prose h2 {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 1.375rem;
+  margin-top: 3rem;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--border);
+  position: relative;
+}
+
+/* Subtle gradient accent under section headings */
+.prose h2::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-muted) 100%);
+  border-radius: 1px;
+}
+
+/* Repository/Library entry cards */
+.prose h3 {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.625rem;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  padding: 1rem 1.25rem 0.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: 0.625rem 0.625rem 0 0;
+  position: relative;
+}
+
+/* First h3 after h2 gets extra top margin */
+.prose h2 + h3 {
+  margin-top: 1.75rem;
+}
+
+/* Description paragraph following h3 (inside card) */
+.prose h3 + p {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 0 1.25rem 1rem;
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+}
+
+/* Metadata paragraph (Language, Forks, Category, URL) - card footer */
+.prose h3 + p + p {
+  margin-top: 0;
+  margin-bottom: 1.25rem;
+  padding: 0.75rem 1.25rem 1rem;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-top: 1px dashed var(--border);
+  border-radius: 0 0 0.625rem 0.625rem;
+  font-size: 0.8125rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* When h3 description is missing, metadata becomes the second element */
+.prose h3 + p:last-of-type:not(h3 + p + p) {
+  border-radius: 0 0 0.625rem 0.625rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.prose h4 {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.0625rem;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Links - enhanced hover states */
+.prose a {
+  color: var(--accent);
+  text-decoration: none;
+  background: linear-gradient(
+    to right,
+    var(--accent-muted) 0%,
+    var(--accent-muted) 100%
+  );
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  padding-bottom: 2px;
+  transition:
+    color var(--transition-fast),
+    background-size var(--transition-normal) ease-out;
+}
+
+.prose a:hover {
+  color: var(--accent-hover);
+  background-size: 100% 2px;
+}
+
+/* Links inside card headers */
+.prose h3 a {
+  color: var(--text-primary);
+  background: none;
+  padding-bottom: 0;
+}
+
+.prose h3 a:hover {
+  color: var(--accent);
+}
+
+.prose strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Metadata badges styling */
+.prose p strong {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-elevated);
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-muted);
+  letter-spacing: 0.01em;
+  margin-right: 0.125rem;
+}
+
+/* Badge label (Language, Forks, Category) */
+.prose p strong::before {
+  display: none;
+}
+
+/* Inline code */
+.prose code {
+  color: var(--accent);
+  background: var(--accent-muted);
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.8125em;
+  font-family: var(--font-geist-mono, 'Menlo', monospace);
+  border: 1px solid var(--border-muted);
+}
+
+/* Code blocks */
+.prose pre {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 1.25rem;
+  border-radius: 0.625rem;
+  overflow-x: auto;
+  margin: 1.75rem 0;
+  border: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  border: none;
+}
+
+/* Lists with better spacing */
+.prose ul,
+.prose ol {
+  margin: 1.25rem 0;
+  padding-left: 1.25rem;
+}
+
+.prose li {
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  position: relative;
+}
+
+.prose li::marker {
+  color: var(--accent);
+}
+
+/* Nested list items */
+.prose li li {
+  margin-bottom: 0.5rem;
+  font-size: 0.9375rem;
+}
+
+/* Horizontal rule - section divider */
+.prose hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border) 15%,
+    var(--border) 85%,
+    transparent 100%
+  );
+  margin: 2.5rem 0;
+}
+
+/* Blockquotes */
+.prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.25rem;
+  margin: 1.75rem 0;
+  background: var(--bg-secondary);
+  border-radius: 0 0.5rem 0.5rem 0;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.prose blockquote p {
+  margin-bottom: 0;
+}
+
+/* Intro paragraph (first p after h1) - slightly larger */
+.prose h1 + p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+}
+
+/* ============================================
+   Component Styles
+   ============================================ */
+
+/* Cards */
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow var(--transition-normal),
+    transform var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px) scale(1.01);
+  border-color: var(--accent);
+}
+
+.card:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition:
+    background var(--transition-fast),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px -2px rgba(59, 130, 246, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-secondary);
+  border-color: var(--text-muted);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* ============================================
+   Utility Classes
+   ============================================ */
+
+/* Hero text gradient - works in both light and dark modes */
+.text-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--accent) 0%,
+    #8b5cf6 50%,
+    var(--accent-hover) 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 8s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+[data-theme='dark'] .text-gradient {
+  background: linear-gradient(
+    135deg,
+    #60a5fa 0%,
+    #a78bfa 50%,
+    #93c5fd 100%
+  );
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 8s ease infinite;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+[data-theme="dark"] .glass {
+  background: rgba(30, 41, 59, 0.8);
+}
+
+/* Focus States - Accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Enhanced focus ring for interactive elements */
+a:focus-visible,
+button:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+  box-shadow: 0 0 0 4px var(--accent-muted);
+}
+
+/* Selection */
+::selection {
+  background: var(--accent-muted);
+  color: var(--text-primary);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* ============================================
+   Header & Navigation
+   ============================================ */
+
+/* Header scroll shadow - apply via JS when scrolled */
+.header-scrolled {
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.1),
+    0 1px 2px -1px rgb(0 0 0 / 0.1);
+}
+
+[data-theme='dark'] .header-scrolled {
+  box-shadow:
+    0 1px 3px 0 rgb(0 0 0 / 0.3),
+    0 4px 12px -2px rgb(0 0 0 / 0.2);
+}
+
+/* ============================================
+   Feature Cards & Homepage Components
+   ============================================ */
+
+/* Feature card hover effects */
+.feature-card {
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.feature-card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--accent);
+}
+
+.feature-card:active {
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* Feature card icon container */
+.feature-card .icon-container {
+  transition: transform var(--transition-normal);
+}
+
+.feature-card:hover .icon-container {
+  transform: scale(1.1);
+}
+
+/* Report card link hover effects */
+.report-card {
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.report-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ============================================
+   Emoji Visibility Improvements
+   ============================================ */
+
+/* Star emoji and other metadata emojis - improved visibility */
+.prose p strong,
+.metadata-badge {
+  /* Ensure emoji contrast in dark mode */
+  filter: none;
+}
+
+[data-theme='dark'] .emoji-star,
+[data-theme='dark'] .prose h3 a[href*='github'] + p strong:first-child {
+  filter: brightness(1.2) saturate(1.1);
+}
+
+/* General emoji visibility improvement in dark mode */
+[data-theme='dark'] .prose {
+  --emoji-filter: brightness(1.1);
+}
+
+/* ============================================
+   Mobile Responsive Adjustments
+   ============================================ */
+
+/* Small screens (< 640px) */
+@media (max-width: 639px) {
+  /* Reduce base font size slightly */
+  html {
+    font-size: 15px;
+  }
+
+  /* Prose typography adjustments */
+  .prose h1 {
+    font-size: 1.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose h2 {
+    font-size: 1.25rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .prose h2::after {
+    width: 48px;
+  }
+
+  .prose h3 {
+    font-size: 1rem;
+    padding: 0.875rem 1rem 0.625rem;
+  }
+
+  .prose h3 + p {
+    padding: 0 1rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  .prose h3 + p + p {
+    padding: 0.625rem 1rem 0.875rem;
+    font-size: 0.75rem;
+    gap: 0.375rem;
+  }
+
+  .prose p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .prose h1 + p {
+    font-size: 1rem;
+  }
+
+  /* Card padding adjustments */
+  .prose pre {
+    padding: 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .prose blockquote {
+    padding: 0.875rem 1rem;
+    margin: 1.25rem 0;
+  }
+
+  /* Lists */
+  .prose ul,
+  .prose ol {
+    padding-left: 1rem;
+  }
+
+  .prose li {
+    font-size: 0.9375rem;
+    margin-bottom: 0.625rem;
+    padding-left: 0.375rem;
+  }
+
+  /* Badges - smaller on mobile */
+  .prose p strong {
+    padding: 0.1875rem 0.5rem;
+    font-size: 0.6875rem;
+  }
+
+  /* Inline code */
+  .prose code {
+    padding: 0.125rem 0.375rem;
+    font-size: 0.75em;
+  }
+
+  /* Cards - reduce hover transform on mobile (touch devices) */
+  .card:hover,
+  .feature-card:hover,
+  .report-card:hover {
+    transform: translateY(-1px);
+  }
+
+  /* Buttons - ensure 44px minimum touch target */
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Medium screens (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .prose h1 {
+    font-size: 2rem;
+  }
+
+  .prose h3 {
+    padding: 1rem 1.125rem 0.75rem;
+  }
+
+  .prose h3 + p {
+    padding: 0 1.125rem 0.875rem;
+  }
+
+  .prose h3 + p + p {
+    padding: 0.75rem 1.125rem 0.875rem;
+  }
+}
+
+/* ============================================
+   Touch Device Optimizations
+   ============================================ */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover transforms on touch devices - they linger awkwardly */
+  .card:hover,
+  .feature-card:hover,
+  .report-card:hover {
+    transform: none;
+  }
+
+  /* Keep active states for feedback */
+  .card:active,
+  .feature-card:active,
+  .report-card:active {
+    transform: scale(0.98);
+  }
+
+  /* Ensure links have adequate tap targets */
+  .prose a {
+    padding: 0.125rem 0;
+  }
+
+  .prose h3 a {
+    display: block;
+    padding: 0.25rem 0;
+  }
+}
+
+/* ============================================
+   Accessibility Enhancements
+   ============================================ */
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  :root {
+    --text-primary: #000000;
+    --text-secondary: #1a1a1a;
+    --text-muted: #333333;
+    --border: #666666;
+    --accent: #0052cc;
+  }
+
+  [data-theme='dark'] {
+    --text-primary: #ffffff;
+    --text-secondary: #e5e5e5;
+    --text-muted: #cccccc;
+    --border: #999999;
+    --accent: #79b8ff;
+  }
+
+  /* Stronger focus indicators */
+  :focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+
+  /* Remove decorative shadows in high contrast */
+  .card,
+  .feature-card,
+  .report-card {
+    box-shadow: none;
+    border-width: 2px;
+  }
+}
+
+/* Ensure minimum touch targets (WCAG 2.2) */
+a,
+button,
+[role='button'],
+input,
+select,
+textarea {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Exception for inline links */
+.prose a {
+  min-height: auto;
+  min-width: auto;
+}
+
+/* Skip link for keyboard navigation */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  z-index: 9999;
+  font-weight: 500;
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ============================================
+   Performance Optimizations
+   ============================================ */
+
+/* GPU-accelerated transforms for animated elements */
+.card,
+.feature-card,
+.report-card,
+.btn-primary,
+.btn-secondary {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Remove will-change when not animating to free up resources */
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .feature-card,
+  .report-card,
+  .btn-primary,
+  .btn-secondary {
+    will-change: auto;
+  }
+}
+
+/* ============================================
+   Visual Consistency - Border Radius Tokens
+   ============================================ */
+
+:root {
+  --radius-sm: 0.375rem;   /* 6px - badges, inline code */
+  --radius-md: 0.5rem;     /* 8px - buttons, small cards */
+  --radius-lg: 0.625rem;   /* 10px - cards, prose elements */
+  --radius-xl: 0.75rem;    /* 12px - large cards, containers */
+}
+
+/* Apply consistent radius to all card elements */
+.prose h3 {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.prose h3 + p + p,
+.prose h3 + p:last-of-type:not(h3 + p + p) {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+.card {
+  border-radius: var(--radius-xl);
+}
+
+.btn-primary,
+.btn-secondary {
+  border-radius: var(--radius-md);
+}
+
+.prose code {
+  border-radius: var(--radius-sm);
+}
+
+.prose pre {
+  border-radius: var(--radius-lg);
+}
+
+.prose blockquote {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.prose p strong {
+  border-radius: var(--radius-sm);
+}
+
+/* ============================================
+   Emoji Visibility - Enhanced for Both Themes
+   ============================================ */
+
+/* Emoji rendering optimization */
 .prose h1,
 .prose h2,
-.prose h3,
-.prose h4 {
-  color: #0f172a; /* slate-900 equivalent */
+.prose h3 {
+  font-variant-emoji: emoji;
 }
-.prose a {
-  text-decoration-color: #3b82f6; /* blue-500 */
+
+/* Dark mode emoji brightness adjustment */
+[data-theme='dark'] .prose h1,
+[data-theme='dark'] .prose h2 {
+  text-shadow: 0 0 0 transparent; /* Force proper emoji rendering */
+}
+
+/* ============================================
+   Reduced Motion Support
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .text-gradient {
+    animation: none;
+  }
+
+  .card:hover,
+  .feature-card:hover,
+  .report-card:hover {
+    transform: none;
+  }
+
+  .btn-primary:hover,
+  .btn-primary:active,
+  .btn-secondary:hover,
+  .btn-secondary:active {
+    transform: none;
+  }
 }

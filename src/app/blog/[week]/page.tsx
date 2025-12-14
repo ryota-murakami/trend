@@ -14,6 +14,10 @@ export async function generateStaticParams() {
   }))
 }
 
+/**
+ * ReportPage displays a single weekly trend report with improved
+ * typography and spacing for optimal readability.
+ */
 export default async function ReportPage({
   params,
 }: {
@@ -34,62 +38,135 @@ export default async function ReportPage({
   const nextReport = currentIndex > 0 ? allReports[currentIndex - 1] : null
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Report Header */}
-      <section className="bg-white border-b">
-        <div className="mx-auto max-w-4xl px-4 py-8">
-          <div className="mb-4">
+    <div className="min-h-screen bg-[var(--bg-primary)]">
+      {/* Article Header */}
+      <header className="border-b border-[var(--border)] bg-[var(--bg-secondary)]">
+        <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:py-16">
+          {/* Breadcrumb */}
+          <nav className="mb-6">
             <Link
               href="/"
-              className="text-blue-600 hover:text-blue-800 font-medium"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--text-muted)] transition-colors hover:text-[var(--accent)]"
             >
-              ← Back to Home
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                />
+              </svg>
+              Back to Home
             </Link>
-          </div>
-          <div className="mb-2 text-sm text-blue-600">
-            {formatDate(report.date)}
-          </div>
-          <h1 className="text-4xl font-bold text-gray-900">{report.title}</h1>
-        </div>
-      </section>
+          </nav>
 
-      {/* Report Content */}
-      <section className="py-12">
-        <div className="mx-auto max-w-4xl px-4">
-          <article
-            className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-a:text-blue-600 prose-strong:text-gray-900 prose-code:text-pink-600 prose-pre:bg-gray-900 prose-pre:text-gray-100"
+          {/* Date Badge */}
+          <div className="mb-4">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--accent-muted)] px-3 py-1 text-sm font-medium text-[var(--accent)]">
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              {formatDate(report.date)}
+            </span>
+          </div>
+
+          {/* Title */}
+          <h1 className="text-3xl font-bold tracking-tight text-[var(--text-primary)] sm:text-4xl lg:text-5xl">
+            {report.title}
+          </h1>
+
+          {/* Excerpt */}
+          {report.excerpt && (
+            <p className="mt-4 text-lg text-[var(--text-secondary)] leading-relaxed">
+              {report.excerpt}
+            </p>
+          )}
+        </div>
+      </header>
+
+      {/* Article Content */}
+      <article className="py-12 sm:py-16">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
+          <div
+            className="prose prose-lg max-w-none"
             dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
         </div>
-      </section>
+      </article>
 
-      {/* Navigation */}
-      <section className="border-t bg-white">
-        <div className="mx-auto max-w-4xl px-4 py-8">
-          <div className="flex justify-between items-center">
+      {/* Navigation Between Reports */}
+      <nav className="border-t border-[var(--border)] bg-[var(--bg-secondary)]">
+        <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Previous Report */}
             <div>
-              {previousReport && (
+              {previousReport ? (
                 <Link
                   href={`/blog/${previousReport.week}`}
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                  className="group block rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition-all hover:border-[var(--accent)] hover:shadow-md"
                 >
-                  ← Previous: {previousReport.title}
+                  <span className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                    ← Previous
+                  </span>
+                  <span className="mt-1 block text-sm font-medium text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
+                    {previousReport.title}
+                  </span>
                 </Link>
+              ) : (
+                <div className="rounded-xl border border-[var(--border-muted)] bg-[var(--bg-tertiary)] p-4 opacity-50">
+                  <span className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                    ← Previous
+                  </span>
+                  <span className="mt-1 block text-sm text-[var(--text-muted)]">
+                    No previous report
+                  </span>
+                </div>
               )}
             </div>
-            <div>
-              {nextReport && (
+
+            {/* Next Report */}
+            <div className="text-right">
+              {nextReport ? (
                 <Link
                   href={`/blog/${nextReport.week}`}
-                  className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium"
+                  className="group block rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-4 transition-all hover:border-[var(--accent)] hover:shadow-md"
                 >
-                  Next: {nextReport.title} →
+                  <span className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                    Next →
+                  </span>
+                  <span className="mt-1 block text-sm font-medium text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
+                    {nextReport.title}
+                  </span>
                 </Link>
+              ) : (
+                <div className="rounded-xl border border-[var(--border-muted)] bg-[var(--bg-tertiary)] p-4 opacity-50">
+                  <span className="text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
+                    Next →
+                  </span>
+                  <span className="mt-1 block text-sm text-[var(--text-muted)]">
+                    No next report
+                  </span>
+                </div>
               )}
             </div>
           </div>
         </div>
-      </section>
+      </nav>
     </div>
   )
 }

@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
         errors.push(`Failed to send to ${subscription.endpoint}`)
 
         // Remove invalid subscriptions
-        const webPushError = error as any
+        const webPushError = error as { statusCode?: number }
         if (
           webPushError.statusCode === 410 ||
           webPushError.statusCode === 404

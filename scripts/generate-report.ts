@@ -214,13 +214,13 @@ Welcome to this week's React Weekly Trends report! This week brings exciting upd
   // Add trending repositories
   data.repositories.forEach((repo, index) => {
     const starsThisWeek = Math.floor(Math.random() * 1000) + 100 // Mock weekly stars
-    content += `### ${index + 1}. **${
-      repo.name
-    }** ⭐ ${repo.stargazers_count.toLocaleString()} (+${starsThisWeek} this week)\n`
+    content += `### ${index + 1}. [**${repo.name}**](${
+      repo.html_url
+    }) ⭐ ${repo.stargazers_count.toLocaleString()} (+${starsThisWeek} this week)\n`
     content += `${repo.description || 'No description available'}\n\n`
     content += `**Language**: ${repo.language || 'Unknown'} | **Forks**: ${
       repo.forks_count
-    }\n\n`
+    } | [View on GitHub](${repo.html_url})\n\n`
   })
 
   content += `\n## 📚 Library Updates\n\n`
