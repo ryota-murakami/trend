@@ -15,24 +15,24 @@
   "dependencies": {
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.0",
-    "next": "16.0.5",
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "next": "16.0.10",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/node": "^25.0.1",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
     "@types/web-push": "^3.6.4",
     "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.5",
-    "tailwindcss": "^4",
-    "tsx": "^4.19.2",
-    "typescript": "^5"
+    "eslint": "^9.39.2",
+    "eslint-config-next": "16.0.10",
+    "tailwindcss": "^4.1.18",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
