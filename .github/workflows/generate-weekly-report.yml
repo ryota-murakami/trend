@@ -23,13 +23,11 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -42,7 +40,7 @@ jobs:
           NEXT_PUBLIC_VAPID_PUBLIC_KEY: ${{ secrets.NEXT_PUBLIC_VAPID_PUBLIC_KEY }}
           SEND_NOTIFICATIONS: 'true'
         run: |
-          pnpm run generate-report
+          pnpm generate-report
 
       - name: Commit and push report
         run: |
@@ -75,13 +73,11 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '22'
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -89,7 +85,7 @@ jobs:
 
       - name: Start development server
         run: |
-          pnpm run dev &
+          pnpm dev &
           sleep 10 # Wait for server to start
 
       - name: Send push notifications
